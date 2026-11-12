@@ -21,73 +21,73 @@ const any = () => true;
 export const TEMPLATES: Template[] = [
   { key: 'country-any', category: 'country', weight: 1, text: () => 'Navedi državu u Evropi.', test: any },
   {
-    key: 'country-coast', category: 'country', weight: 1, text: () => 'Država u Evropi koja ima more?', test: has('coast'),
+    key: 'country-coast', category: 'country', weight: 1, text: () => 'Navedi državu u Evropi koja ima more.', test: has('coast'),
     mismatch: (e) => `${e.name} nema izlaz na more.`,
   },
   {
-    key: 'country-landlocked', category: 'country', weight: 0.8, text: () => 'Država u Evropi bez izlaza na more?', test: has('landlocked'),
+    key: 'country-landlocked', category: 'country', weight: 0.8, text: () => 'Navedi državu u Evropi bez izlaza na more.', test: has('landlocked'),
     mismatch: (e) => (e.tags.includes('coast') ? `${e.name} ima izlaz na more.` : `${e.name} se ne računa u ovom pitanju.`),
   },
   {
-    key: 'country-eu', category: 'country', weight: 0.8, text: () => 'Država članica Evropske unije?', test: has('eu'),
+    key: 'country-eu', category: 'country', weight: 0.8, text: () => 'Navedi državu članicu Evropske unije.', test: has('eu'),
     mismatch: (e) => `${e.name} nije članica EU.`,
   },
   {
-    key: 'country-exyu', category: 'country', weight: 0.35, text: () => 'Država nastala raspadom Jugoslavije?', test: has('exyu'),
+    key: 'country-exyu', category: 'country', weight: 0.35, text: () => 'Navedi državu nastalu raspadom Jugoslavije.', test: has('exyu'),
     mismatch: (e) => `${e.name} nije bila republika SFRJ.`,
   },
-  { key: 'country-letter', category: 'country', weight: 1.2, letter: true, text: (l) => `Država u Evropi na slovo ${l}?`, test: any },
+  { key: 'country-letter', category: 'country', weight: 1.2, letter: true, text: (l) => `Navedi državu u Evropi na slovo ${l}.`, test: any },
 
-  { key: 'capital-any', category: 'capital', weight: 1, text: () => 'Navedi glavni grad neke evropske države.', test: any },
+  { key: 'capital-any', category: 'capital', weight: 1, text: () => 'Navedi glavni grad u Evropi.', test: any },
   {
-    key: 'capital-eu', category: 'capital', weight: 0.6, text: () => 'Glavni grad države članice EU?', test: has('eu'),
+    key: 'capital-eu', category: 'capital', weight: 0.6, text: () => 'Navedi glavni grad neke članice EU.', test: has('eu'),
     mismatch: (e) => `${e.name} nije glavni grad članice EU.`,
   },
   {
-    key: 'capital-exyu', category: 'capital', weight: 0.3, text: () => 'Glavni grad bivše jugoslovenske republike?', test: has('exyu'),
+    key: 'capital-exyu', category: 'capital', weight: 0.3, text: () => 'Navedi glavni grad bivše jugoslovenske republike.', test: has('exyu'),
     mismatch: (e) => `${e.name} nije glavni grad bivše republike SFRJ.`,
   },
-  { key: 'capital-letter', category: 'capital', weight: 0.8, letter: true, text: (l) => `Glavni grad u Evropi na slovo ${l}?`, test: any },
+  { key: 'capital-letter', category: 'capital', weight: 0.8, letter: true, text: (l) => `Navedi glavni grad u Evropi na slovo ${l}.`, test: any },
 
-  { key: 'mne-any', category: 'mne-city', weight: 1, text: () => 'Navedi grad ili mjesto u Crnoj Gori.', test: any },
+  { key: 'mne-any', category: 'mne-city', weight: 1, text: () => 'Navedi grad u Crnoj Gori.', test: any },
   {
-    key: 'mne-coast', category: 'mne-city', weight: 0.8, text: () => 'Grad ili mjesto na crnogorskom primorju?', test: has('coast'),
+    key: 'mne-coast', category: 'mne-city', weight: 0.8, text: () => 'Navedi grad na crnogorskom primorju.', test: has('coast'),
     mismatch: (e) => `${e.name} nije na primorju.`,
   },
   {
-    key: 'mne-north', category: 'mne-city', weight: 0.8, text: () => 'Grad na sjeveru Crne Gore?', test: has('north'),
+    key: 'mne-north', category: 'mne-city', weight: 0.8, text: () => 'Navedi grad na sjeveru Crne Gore.', test: has('north'),
     mismatch: (e) => `${e.name} nije na sjeveru.`,
   },
 
   { key: 'mammal-any', category: 'mammal', weight: 1, text: () => 'Navedi jednog sisara.', test: any },
   {
-    key: 'mammal-domestic', category: 'mammal', weight: 0.7, text: () => 'Domaća životinja koja je sisar?', test: has('domestic'),
+    key: 'mammal-domestic', category: 'mammal', weight: 0.7, text: () => 'Navedi domaću životinju koja je sisar.', test: has('domestic'),
     mismatch: (e) => `${cap(e.name)} nije domaća životinja.`,
   },
   {
-    key: 'mammal-balkan', category: 'mammal', weight: 0.8, text: () => 'Divlji kopneni sisar koji živi na Balkanu?', test: has('balkan'),
+    key: 'mammal-balkan', category: 'mammal', weight: 0.8, text: () => 'Navedi divljeg kopnenog sisara sa Balkana.', test: has('balkan'),
     mismatch: (e) => `${cap(e.name)} nije divlji kopneni sisar Balkana.`,
   },
   {
-    key: 'mammal-sea', category: 'mammal', weight: 0.6, text: () => 'Sisar koji živi u moru?', test: has('sea'),
+    key: 'mammal-sea', category: 'mammal', weight: 0.6, text: () => 'Navedi sisara koji živi u moru.', test: has('sea'),
     mismatch: (e) => `${cap(e.name)} ne živi u moru.`,
   },
-  { key: 'mammal-letter', category: 'mammal', weight: 1, letter: true, text: (l) => `Sisar na slovo ${l}?`, test: any },
+  { key: 'mammal-letter', category: 'mammal', weight: 1, letter: true, text: (l) => `Navedi sisara na slovo ${l}.`, test: any },
 
   { key: 'bird-any', category: 'bird', weight: 1, text: () => 'Navedi jednu vrstu ptice.', test: any },
   {
-    key: 'bird-raptor', category: 'bird', weight: 0.7, text: () => 'Ptica grabljivica?', test: has('raptor'),
+    key: 'bird-raptor', category: 'bird', weight: 0.7, text: () => 'Navedi pticu grabljivicu.', test: has('raptor'),
     mismatch: (e) => `${cap(e.name)} nije grabljivica.`,
   },
   {
-    key: 'bird-water', category: 'bird', weight: 0.7, text: () => 'Ptica koja živi na vodi ili uz vodu?', test: has('water'),
+    key: 'bird-water', category: 'bird', weight: 0.7, text: () => 'Navedi pticu koja živi na vodi ili uz vodu.', test: has('water'),
     mismatch: (e) => `${cap(e.name)} nije vodena ptica.`,
   },
   {
-    key: 'bird-poultry', category: 'bird', weight: 0.4, text: () => 'Domaća ptica (živina)?', test: has('poultry'),
+    key: 'bird-poultry', category: 'bird', weight: 0.4, text: () => 'Navedi domaću pticu (živinu).', test: has('poultry'),
     mismatch: (e) => `${cap(e.name)} nije živina.`,
   },
-  { key: 'bird-letter', category: 'bird', weight: 0.8, letter: true, text: (l) => `Ptica na slovo ${l}?`, test: any },
+  { key: 'bird-letter', category: 'bird', weight: 0.8, letter: true, text: (l) => `Navedi pticu na slovo ${l}.`, test: any },
 ];
 
 const TEMPLATE_BY_KEY = new Map(TEMPLATES.map((t) => [t.key, t]));
@@ -176,6 +176,7 @@ function buildCandidates(used: ReadonlySet<string>): Candidate[] {
 
 /** Minimum number of unused suggestible answers we want for a question at this streak. */
 export function minRemainingFor(streak: number): number {
+  if (streak < 3) return 12;
   if (streak < 5) return 6;
   if (streak < 15) return 4;
   if (streak < 30) return 2;

@@ -10,7 +10,7 @@ export function timeLimitMs(streak: number): number {
 }
 
 export type Phase = 'idle' | 'playing' | 'review' | 'over';
-export type PauseReason = 'hidden' | 'rules' | 'answers';
+export type PauseReason = 'hidden' | 'menu';
 export type LossReason = 'wrong' | 'unknown' | 'skip' | 'timeout';
 
 export interface Feedback {
@@ -157,7 +157,7 @@ export function reducer(s: GameState, a: Action): GameState {
         seed: a.seed,
         lossSeq: s.lossSeq,
         // Keep open sheets/hidden state: a game started while paused starts paused.
-        pauses: s.pauses.filter((p) => p !== 'answers'),
+        pauses: s.pauses.filter((p) => p === 'hidden'),
       };
       return advance(fresh, a.now);
     }

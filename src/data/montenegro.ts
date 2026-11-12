@@ -1,9 +1,8 @@
 import { defineEntries } from './types';
 
 /**
- * Towns in Montenegro: every municipal centre plus well-known coastal and central towns.
+ * Towns in Montenegro: every municipal centre plus well-known smaller towns (Perast, Risan, Petrovac…).
  * Tags: coast (crnogorsko primorje), north (sjeverni region), central.
- * Questions say "grad ili mjesto" so smaller towns like Perast are fair answers.
  */
 export const montenegroCities = defineEntries('mne-city', [
   ['Podgorica', ['Titograd'], ['central']],
@@ -27,7 +26,6 @@ export const montenegroCities = defineEntries('mne-city', [
   ['Perast', [], ['coast']],
   ['Igalo', [], ['coast']],
   ['Bijela', [], ['coast']],
-  ['Bečići', [], ['coast']],
   ['Bijelo Polje', [], ['north']],
   ['Pljevlja', [], ['north']],
   ['Berane', ['Ivangrad'], ['north']],

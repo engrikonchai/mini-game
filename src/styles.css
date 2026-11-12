@@ -359,30 +359,37 @@ button {
 }
 
 /* ==========================================================================
-   Game — HUD
+   Game
+   Composition: compact header → timer bar → play group (question card, feedback, answer field).
+   The card absorbs spare height up to a cap; anything left goes above it, so the question,
+   feedback and field always read as one unit and the field stays in the thumb zone.
    ========================================================================== */
 .game {
-  padding-top: calc(var(--safe-top) + 8px);
-  padding-bottom: calc(var(--safe-bottom) + 12px);
+  --card-radius: 22px;
+  --field-radius: 18px;
+  --gap: 12px;
+  padding-top: calc(var(--safe-top) + 10px);
+  padding-bottom: calc(var(--safe-bottom) + 14px);
 }
 
+/* Header ------------------------------------------------------------------ */
 .hud {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 52px;
-  margin-right: -6px;
+  gap: 10px;
+  min-height: 44px;
+  margin-right: -8px;
 }
 
 .streak {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 44px;
-  padding: 0 14px 0 11px;
-  border-radius: var(--r-md);
+  height: 40px;
+  padding: 0 12px 0 10px;
+  border-radius: 12px;
   background: var(--lime-soft);
-  border: 1px solid rgba(200, 245, 58, 0.22);
+  border: 1px solid rgba(200, 245, 58, 0.24);
   color: var(--lime);
 }
 .streak__icon {
@@ -393,19 +400,17 @@ button {
   min-width: 1ch;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 24px;
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   animation: bump 380ms var(--ease-spring);
 }
 .streak__label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(200, 245, 58, 0.72);
-  margin-top: 3px;
+  letter-spacing: 0.06em;
+  color: rgba(200, 245, 58, 0.78);
 }
 .streak.is-milestone {
   animation: milestone 900ms var(--ease-out);
@@ -413,73 +418,42 @@ button {
 
 .lives {
   display: inline-flex;
-  gap: 2px;
+  gap: 3px;
   color: var(--coral);
 }
 .life {
   display: inline-grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   transition:
     color 200ms,
     opacity 200ms;
 }
 .life.is-lost {
   color: var(--text-3);
-  opacity: 0.55;
+  opacity: 0.5;
 }
 .life.is-losing {
   animation: heart-loss 560ms var(--ease-out);
 }
 
-.hud__actions {
-  margin-left: auto;
-  display: flex;
-}
-
-/* Meta row: category + timer */
-.meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  min-height: 28px;
-}
-.meta__cat {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--text-2);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.meta__cat svg {
-  color: var(--lime);
-}
-
 .timer {
+  margin-left: auto;
   display: inline-flex;
   align-items: baseline;
-  gap: 4px;
-  color: var(--text);
+  gap: 2px;
+  min-width: 46px;
+  justify-content: flex-end;
+  color: var(--text-2);
   transition: color 200ms;
-}
-.timer svg {
-  align-self: center;
-  color: currentColor;
-  opacity: 0.8;
 }
 .timer__num {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
+  font-weight: 600;
+  font-size: 18px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  min-width: 2ch;
-  text-align: right;
 }
 .timer__unit {
   font-size: 13px;
@@ -499,8 +473,8 @@ button {
 }
 
 .timerbar {
-  height: 4px;
-  margin-top: 10px;
+  height: 3px;
+  margin-top: 8px;
   border-radius: var(--r-pill);
   background: var(--surface-2);
   overflow: hidden;
@@ -522,61 +496,94 @@ button {
   background: var(--coral);
 }
 
-/* ==========================================================================
-   Game — question stage
-   ========================================================================== */
-.stage {
+/* Play group ---------------------------------------------------------------- */
+.play {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 20px 0;
+  padding-top: 16px;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
-/* "Safe" centering: auto margins centre the content but never push it above the scroll origin. */
-.stage > * {
-  margin-block: auto;
+
+.card {
+  /* A substantial panel that scales with the screen. The play group is centred with auto
+     margins (card top / field bottom), so spare height splits evenly instead of piling up. */
+  flex: none;
+  min-height: clamp(150px, 27dvh, 260px);
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(16px, 2.6dvh, 24px) 20px clamp(18px, 3dvh, 26px);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
 }
-.stage__q {
-  padding-bottom: 6vh;
+.card--review {
+  /* A long review scrolls inside the card so the continue button never leaves the screen. */
+  flex-shrink: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-color: rgba(240, 138, 118, 0.28);
+  background: linear-gradient(var(--coral-soft), var(--coral-soft)), var(--surface);
+  background-blend-mode: normal;
 }
-.question-hint {
-  margin: 14px 0 0;
-  color: var(--text-3);
-  font-size: 14px;
-  animation: fade-in 300ms ease-out 120ms both;
-}
-.question-hint strong {
+
+.card__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
   color: var(--text-2);
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
-[data-compact] .question-hint {
-  display: none;
+.card__cat svg {
+  color: var(--lime);
 }
-[data-compact] .stage__q {
-  padding-bottom: 0;
+
+.card__main {
+  /* Bottom-aligned: the question sits right above the feedback line and answer field. */
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: question-in 220ms var(--ease-out) both;
 }
 
 .question {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(30px, 9.4vw, 40px);
-  line-height: 1.1;
-  letter-spacing: -0.028em;
+  font-size: clamp(28px, min(8.8vw, 4.6dvh), 38px);
+  line-height: 1.12;
+  letter-spacing: -0.026em;
   text-wrap: balance;
-  overflow-wrap: anywhere;
-  animation: question-in 220ms var(--ease-out) both;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.card__hint {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 14px;
+}
+.card__hint strong {
+  color: var(--text-2);
+  font-weight: 600;
 }
 
-/* Review card (after a lost life) */
+/* Review (after a lost life) */
 .review {
-  animation: fade-up 240ms var(--ease-out) both;
+  gap: 0;
 }
 .review__q {
-  margin: 0 0 14px;
-  color: var(--text-3);
+  margin: 0 0 10px;
+  color: var(--text-2);
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 16px;
@@ -589,7 +596,7 @@ button {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--coral);
@@ -603,7 +610,6 @@ button {
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 .review__detail {
@@ -617,7 +623,7 @@ button {
   overflow-wrap: anywhere;
 }
 .review__tips {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 .review__label {
   margin: 0 0 8px;
@@ -648,22 +654,19 @@ button {
 }
 .link-btn {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 7px;
+  column-gap: 7px;
   min-height: 44px;
-  margin-top: 8px;
+  margin-top: 6px;
   color: var(--text-2);
   font-size: 14px;
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--line-strong);
-  text-underline-offset: 4px;
+  text-align: left;
 }
 .link-btn__note {
   color: var(--text-3);
   font-weight: 400;
-  text-decoration: none;
-  display: inline-block;
 }
 .link-btn:active {
   color: var(--text);
@@ -673,7 +676,7 @@ button {
   align-items: center;
   gap: 7px;
   min-height: 44px;
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: var(--lime);
   font-size: 14px;
 }
@@ -681,14 +684,14 @@ button {
   flex: none;
 }
 
-/* ==========================================================================
-   Game — feedback + answer field
-   ========================================================================== */
+/* Feedback + answer field ----------------------------------------------------- */
 .feedback-row {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 44px;
+  margin-top: 4px;
 }
 .feedback {
   flex: 1;
@@ -697,11 +700,12 @@ button {
   align-items: center;
   gap: 7px;
   margin: 0;
+  padding-left: 4px;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.25;
   color: var(--text-2);
-  animation: fade-in 180ms ease-out both;
+  animation: fade-in 160ms ease-out both;
 }
 .feedback svg {
   flex: none;
@@ -713,8 +717,13 @@ button {
 .feedback--warn {
   color: var(--amber);
 }
-.feedback--info {
-  color: var(--text-2);
+
+/* During a review the card carries the message; give its row's height back to the card. */
+.is-review .feedback-row {
+  display: none;
+}
+.is-review .answer {
+  margin-top: var(--gap);
 }
 
 .skip-btn {
@@ -727,7 +736,6 @@ button {
   color: var(--text-3);
   font-size: 14px;
   font-weight: 600;
-  border-radius: var(--r-sm);
   transition: color 140ms;
 }
 .skip-btn:active {
@@ -738,20 +746,23 @@ button {
 }
 
 .answer {
+  flex: none;
+  margin-bottom: auto;
   position: relative;
   display: flex;
-  gap: 8px;
-  padding: 6px;
-  border-radius: 18px;
+  align-items: stretch;
+  gap: 6px;
+  padding: 5px;
+  border-radius: var(--field-radius);
   background: var(--surface);
   border: 1px solid var(--line-strong);
   transition:
-    border-color 160ms,
-    background-color 160ms;
+    border-color 140ms,
+    box-shadow 140ms;
 }
 .answer:focus-within {
-  border-color: rgba(200, 245, 58, 0.5);
-  background: var(--surface-2);
+  border-color: rgba(200, 245, 58, 0.55);
+  box-shadow: 0 0 0 3px rgba(200, 245, 58, 0.1);
 }
 .answer__flash {
   position: absolute;
@@ -759,15 +770,15 @@ button {
   border-radius: inherit;
   border: 2px solid var(--lime);
   pointer-events: none;
-  animation: flash 520ms ease-out both;
+  animation: flash 480ms ease-out both;
 }
 .answer__input {
   flex: 1;
   min-width: 0;
   height: 48px;
-  padding: 0 10px 0 12px;
+  padding: 0 8px 0 13px;
   border: 0;
-  border-radius: 12px;
+  border-radius: calc(var(--field-radius) - 5px);
   background: transparent;
   font-family: var(--font-body);
   font-size: 18px; /* ≥16px: prevents iOS zoom on focus */
@@ -786,110 +797,113 @@ button {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-width: 52px;
+  min-width: 96px;
   height: 48px;
-  padding: 0 14px;
-  border-radius: 13px;
+  padding: 0 16px;
+  border-radius: calc(var(--field-radius) - 5px);
   background: var(--lime);
   color: var(--lime-ink);
   font-weight: 700;
   font-size: 16px;
   transition:
     transform 110ms var(--ease-out),
-    background-color 160ms;
+    background-color 140ms;
 }
 .answer__submit:active {
-  transform: scale(0.94);
+  transform: scale(0.96);
   background: #b9e62c;
-}
-.answer__submit.is-continue {
-  padding: 0 16px 0 18px;
 }
 .answer__submit:focus-visible {
   outline-offset: 3px;
-}
-
-.is-review .answer {
-  border-color: var(--line-strong);
-  background: var(--surface);
 }
 
 .loss-flash {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  box-shadow: inset 0 0 0 2px var(--coral), inset 0 0 80px rgba(240, 138, 118, 0.25);
+  box-shadow: inset 0 0 0 2px var(--coral), inset 0 0 80px rgba(240, 138, 118, 0.22);
   animation: loss-flash 700ms ease-out both;
   z-index: 2;
 }
 
 /* ==========================================================================
-   Compact layout — keyboard open or short screen
+   Compact layout — keyboard open, or a short screen
+   Small header, the card only as tall as its content, field directly above the keyboard.
    ========================================================================== */
 [data-compact] .game {
+  --gap: 8px;
   padding-top: calc(var(--safe-top) + 4px);
   padding-bottom: calc(var(--safe-bottom) + 8px);
 }
 [data-kb] .game {
-  /* Field sits right above the keyboard. */
   padding-bottom: 8px;
 }
 [data-compact] .hud {
-  min-height: 44px;
-  gap: 10px;
+  min-height: 40px;
 }
 [data-compact] .streak {
-  height: 38px;
-  padding: 0 11px 0 9px;
+  height: 34px;
+  padding: 0 10px 0 8px;
 }
 [data-compact] .streak__num {
-  font-size: 22px;
-}
-[data-compact] .life {
-  width: 22px;
-}
-[data-compact] .meta {
-  margin-top: 6px;
-  min-height: 24px;
-}
-[data-compact] .timer__num {
-  font-size: 19px;
+  font-size: 20px;
 }
 [data-compact] .timerbar {
-  margin-top: 6px;
+  margin-top: 4px;
 }
-[data-compact] .stage {
-  padding: 10px 0 4px;
+[data-compact] .play {
+  padding-top: 8px;
+}
+[data-compact] .card {
+  min-height: 132px;
+  gap: 8px;
+  padding: 12px 16px 14px;
+  border-radius: 18px;
+}
+[data-compact] .card__cat {
+  font-size: 11px;
+}
+/* Keyboard open: the field is pinned to the bottom (right above the keyboard) and the
+   card fills the space between the header and the feedback line. */
+[data-kb] .answer {
+  margin-bottom: 0;
+}
+[data-compact] .card--review {
+  min-height: 0;
+}
+[data-kb] .card {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 [data-compact] .question {
-  font-size: clamp(23px, 6.6vw, 28px);
-  line-height: 1.12;
+  font-size: clamp(22px, 6.4vw, 27px);
+  line-height: 1.15;
+}
+[data-kb] .card__hint {
+  display: none;
 }
 [data-compact] .feedback-row {
   min-height: 40px;
+  margin-top: 0;
 }
 [data-compact] .review__q {
   margin-bottom: 4px;
   font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-[data-kb] .review__label {
-  display: none;
 }
 [data-compact] .review__title {
-  font-size: 22px;
+  font-size: 21px;
 }
 [data-compact] .review__detail {
   margin-top: 4px;
   font-size: 15px;
 }
 [data-compact] .review__tips {
-  margin-top: 10px;
+  margin-top: 8px;
 }
-[data-compact] .review__label {
-  margin-bottom: 6px;
+[data-kb] .review__label {
+  display: none;
 }
 [data-compact] .chip {
   height: 30px;
@@ -897,7 +911,7 @@ button {
 }
 [data-compact] .link-btn,
 [data-compact] .review__reported {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* Start / result on short screens */
@@ -1108,9 +1122,54 @@ button {
   text-align: center;
 }
 .sheet__buttons {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  display: flex;
   gap: 10px;
+}
+.sheet__buttons .btn {
+  flex: 1;
+}
+.sheet__buttons .btn--primary {
+  flex: 1.5;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+.menu__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+}
+.menu__row:last-child {
+  border-bottom: 0;
+}
+.menu__row svg {
+  flex: none;
+  color: var(--text-2);
+}
+.menu__row span:first-of-type {
+  flex: 1;
+}
+.menu__meta {
+  color: var(--text-2);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.menu__row--danger,
+.menu__row--danger svg {
+  color: var(--coral);
+}
+.menu__row:active {
+  background: var(--surface-2);
 }
 
 .rules p {

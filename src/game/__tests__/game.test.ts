@@ -199,10 +199,10 @@ describe('engine', () => {
     let s = start(0);
     s = reducer(s, { type: 'pause', reason: 'hidden', now: 5000 });
     expect(s.remainingMs).toBe(15000);
-    s = reducer(s, { type: 'pause', reason: 'rules', now: 6000 });
+    s = reducer(s, { type: 'pause', reason: 'menu', now: 6000 });
     s = reducer(s, { type: 'resume', reason: 'hidden', now: 60000 });
     expect(s.deadline).toBeNull();
-    s = reducer(s, { type: 'resume', reason: 'rules', now: 70000 });
+    s = reducer(s, { type: 'resume', reason: 'menu', now: 70000 });
     expect(s.deadline).toBe(85000);
     expect(reducer(s, { type: 'timeout', now: 80000, round: s.round })).toBe(s);
   });
