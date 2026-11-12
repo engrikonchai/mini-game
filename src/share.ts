@@ -3,7 +3,7 @@ import { correctAnswers } from './plural';
 export type ShareOutcome = 'shared' | 'copied' | 'cancelled' | 'failed';
 
 export async function shareResult(streak: number): Promise<ShareOutcome> {
-  const url = window.location.origin + window.location.pathname;
+  const url = import.meta.env.VITE_SHARE_URL || window.location.origin + window.location.pathname;
   const text = `Dok znaš: ${streak} ${correctAnswers(streak)} zaredom. Možeš li bolje?`;
 
   if (typeof navigator.share === 'function') {
